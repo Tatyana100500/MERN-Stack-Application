@@ -1,1 +1,0 @@
-# test-task-for-basics-tech
