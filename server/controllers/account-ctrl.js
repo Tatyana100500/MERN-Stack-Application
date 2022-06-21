@@ -103,6 +103,7 @@ getAccountById = async (req, res) => {
 }
 
 getAccounts = async (req, res) => {
+	console.log(res)
     await Account.find({}, (err, accounts) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
