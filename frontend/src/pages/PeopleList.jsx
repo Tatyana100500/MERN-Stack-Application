@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactTable from 'react-table'
-import { Col, Button } from 'react-bootstrap';
+import { Navbar, Nav, Button } from 'react-bootstrap';
 import api from '../api'
 
 import styled from 'styled-components'
@@ -32,23 +32,13 @@ class PeopleList extends Component {
             })
         }).catch(e => console.log(e))
     }
-
+	
     render() {
+		const clickAccount = () => {
+			console.log('!!!!!!!!')
+		}
         const { people, isLoading } = this.state
         console.log('TCL: PeopleList -> render -> people', people)
-
-        const columns = [
-            {
-                Header: 'PHOTO',
-                accessor: 'photo',
-                filterable: true,
-            },
-            {
-                Header: 'Name',
-                accessor: 'name',
-                filterable: true,
-            },
-        ]
 
         let showTable = true
         if (!people.length) {
@@ -56,11 +46,19 @@ class PeopleList extends Component {
         }
 
         return (
-            <Col xs={3}>
-                {showTable && (
-                    people.map(({ id, name, photo }) => <div key={id}>{name}</div>)
+		<div className="container">
+		<Nav.Item
+      onClick={clickAccount}
+      className="nav-item mb-3 text-left flex-grow-1"
+    >
+      {showTable && (people.map(({ _id, name, photo }) => 
+	  <Nav.Link key={_id} className="nav-link bg-light mb-3">
+		<img src={photo}></img>
+		<div className="text-dark" >{name}</div>
+		</Nav.Link> )
 				)}
-            </Col>
+    </Nav.Item>
+	</div>
         )
     }
 }

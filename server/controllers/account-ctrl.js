@@ -1,8 +1,9 @@
 const Account = require('../models/account-model')
-
+const jwt = require('jsonwebtoken')
+const accessTokenSecret = 'youraccesstokensecret';
 createAccount = (req, res) => {
     const body = req.body
-
+	console.log(body, '$$$$$$$$$$')
     if (!body) {
         return res.status(400).json({
             success: false,
@@ -11,6 +12,7 @@ createAccount = (req, res) => {
     }
 
     const account = new Account(body)
+	console.log(account, '$$$$$$$$$$')
 
     if (!account) {
         return res.status(400).json({ success: false, error: err })
@@ -31,6 +33,36 @@ createAccount = (req, res) => {
                 message: 'Account not created!',
             })
         })
+}
+logIn = (req, res) => {
+    const body = req.body
+    if (!body) {
+        return res.status(400).json({
+            success: false,
+            error: 'You must provide a account',
+        })
+    }
+	const { name, password } = req.body;
+	console.log(req.params.id, '$$$$$$$$$$!!!!!!!!!!!')
+	Account.findOne({ name, password }, (err, account) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+
+        if (!account) {
+            return res
+                .status(404)
+                .json({ success: false, error: `Account not found` })
+        }
+		if (account.name === name && account.password === password) {
+			const accessToken = jwt.sign({ name: account.name,  password: account.password}, accessTokenSecret);
+			return res.status(200).json({ success: true, data: account, token: accessToken })
+		} else {
+			return res
+			.status(401)
+			.json({ success: false, error: 'Username or password incorrect' })
+		}
+    }).catch(err => console.log(err))
 }
 
 updateAccount = async (req, res) => {
@@ -119,6 +151,7 @@ getAccounts = async (req, res) => {
 
 module.exports = {
     createAccount,
+	logIn,
     updateAccount,
     deleteAccount,
     getAccountById,

@@ -29,8 +29,8 @@ class Links extends Component {
                             </Link>
                         </Item>
                         <Item>
-                            <Link to="/account" className="nav-link">
-                                Create Account
+                            <Link to="/account/:id" className="nav-link">
+                                Account
                             </Link>
                         </Item>
                     </List>
