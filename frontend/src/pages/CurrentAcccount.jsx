@@ -12,7 +12,7 @@ const CurrentAccount = (props) => {
   const navigate = useNavigate();
   const logOut = () => {
 	localStorage.clear();
-	render()
+	render();
   };
   const Edit = () => {
 	localStorage.setItem('isLogin', false);
