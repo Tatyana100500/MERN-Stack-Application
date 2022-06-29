@@ -29,7 +29,7 @@ class Links extends Component {
                             </Link>
                         </Item>
                         <Item>
-                            <Link to="/account/:id" className="nav-link">
+                            <Link to="/account" className="nav-link">
                                 Account
                             </Link>
                         </Item>

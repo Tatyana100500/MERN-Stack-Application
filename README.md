@@ -1,3 +1,4 @@
-# Getting Started with Create React App
+# The simple MERN (MongoDB, Express JS, React JS and Node JS) Stack Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Open [http://localhost:3002](http://localhost:3002) to view it in your browser.
+

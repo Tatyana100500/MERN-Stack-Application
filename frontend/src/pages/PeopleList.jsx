@@ -1,66 +1,73 @@
-import React, { Component } from 'react'
-import ReactTable from 'react-table'
+import React, { Component, useEffect, useState, } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
 import { Navbar, Nav, Button } from 'react-bootstrap';
 import api from '../api'
 
 import styled from 'styled-components'
-
-//import 'react-table/react-table.css'
-
-const Wrapper = styled.div`
-    padding: 0 40px 40px 40px;
+const Image = styled.img`
+width: 200px;
+height: 200px;
 `
-
-class PeopleList extends Component {
-	constructor(props) {
+const baseURL= 'http://localhost:3001';
+const currentUserId = localStorage.getItem('currentAccount')
+const PeopleList = () => {
+	const [people, setPeople] = useState([])
+	const [isLoading, setisLoading] = useState(false)
+	useEffect(() => {
+		const fetchData = async () => {
+		await api.getAllAccounts().then(people => {
+			console.log(people)
+			setPeople(people.data.data)
+			setisLoading(true)
+            
+        }).catch(e => console.log(e))
+    };
+    fetchData();
+	}, [currentUserId])
+	const getAge = birthDate => Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e+10)
+	/*constructor(props) {
         super(props)
         this.state = {
             people: [],
-            columns: [],
             isLoading: false,
         }
     }
-
+	
 	componentDidMount = async () => {
         this.setState({ isLoading: true })
-
-        await api.getAllAccounts().then(people => {
-			console.log(people)
-            this.setState({
+this.setState({
                 people: people.data.data,
                 isLoading: false,
             })
-        }).catch(e => console.log(e))
-    }
+        
+	*/
 	
-    render() {
-		const clickAccount = () => {
-			console.log('!!!!!!!!')
-		}
-        const { people, isLoading } = this.state
-        console.log('TCL: PeopleList -> render -> people', people)
-
-        let showTable = true
-        if (!people.length) {
-            showTable = false
-        }
+    //return(
+        //const { people, isLoading } = this.state
+        //console.log('TCL: PeopleList -> render -> people', people)
+		
+        //let showTable = true
+        //if (!people.length) {
+            //showTable = false
+        //}
 
         return (
 		<div className="container">
-		<Nav.Item
-      onClick={clickAccount}
-      className="nav-item mb-3 text-left flex-grow-1"
-    >
-      {showTable && (people.map(({ _id, name, photo }) => 
-	  <Nav.Link key={_id} className="nav-link bg-light mb-3">
-		<img src={photo}></img>
+		<div className="list-group">
+      { (people.map(({ _id, name, birthdate, photo }) => {
+		if (_id !== currentUserId) {
+			return(
+	  <a href="#"  key={_id} className="list-group-item list-group-item-action list-group-item-light mb-3 rounded border border-secondary">
+		<Image className='rounded' src={`${baseURL}/${photo}`}></Image>
 		<div className="text-dark" >{name}</div>
-		</Nav.Link> )
-				)}
-    </Nav.Item>
+		<div className="text-dark" >{getAge(birthdate)}<span className="text-dark m-1">years</span></div>
+		</a> )
+	}})
+	  )}
+    </div>
 	</div>
         )
     }
-}
+//)
 
 export default PeopleList

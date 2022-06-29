@@ -1,13 +1,16 @@
 import React, { useEffect, useRef, useState, useCallback, useContext, createContext } from 'react';
-  import { useNavigate } from 'react-router-dom';
+  import { useNavigate, Link } from 'react-router-dom';
   import { Form, Button, Spinner } from 'react-bootstrap';
   import { useFormik } from 'formik';
   import axios from 'axios';
   import FormContainer from '../components/FormContainer';
+  import { useAuth } from '../hooks/index.js';
+  import { setCurrentUserId, setisLogin } from '../slices/userSlise'
   
   const Login = () => {
-	const authContext = createContext({});
-	const auth = useContext(authContext);
+	//const authContext = createContext({});
+	//const auth = useContext(authContext);
+	const auth = useAuth();
 	const [error, setError] = useState(null);
 	const navigate = useNavigate();
 	const nameRef = useRef();
@@ -38,8 +41,11 @@ import React, { useEffect, useRef, useState, useCallback, useContext, createCont
 			},
 			data: {}});
 		console.log(res.data, "11111", res.data.data._id)
+		localStorage.setItem('isLogin', res.data.success);
+		localStorage.setItem('token', res.data.token);
+	    localStorage.setItem('currentAccount', res.data.data._id);
 		//auth.logIn(res.data);
-		navigate('/account/:id');
+		navigate('/account');
 	  } catch (e) {
 		if (e.isAxiosError && e.response && e.response.status === 401) {
 		  setError('authFailed');
@@ -110,6 +116,13 @@ import React, { useEffect, useRef, useState, useCallback, useContext, createCont
 			  && <Spinner className="mr-1" animation="border" size="sm" />}
 			Войти
 		  </Button>
+		  <div className="text-center">
+			<span>
+			Do you have not an account?
+			<br></br>
+			  <Link to="/">Sign Up</Link>
+			</span>
+		  </div>
 		</Form>
 	  </FormContainer>
 	);
