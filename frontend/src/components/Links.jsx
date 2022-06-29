@@ -15,29 +15,29 @@ const Item = styled.div.attrs({
 })``
 
 class Links extends Component {
-    render() {
-        return (
-            <React.Fragment>
-                <Link to="/" className="navbar-brand">
-                    My test MERN Application
-                </Link>
-                <Collapse>
-                    <List>
-                        <Item>
-                            <Link to="/people" className="nav-link">
-                                People
-                            </Link>
-                        </Item>
-                        <Item>
-                            <Link to="/account" className="nav-link">
-                                Account
-                            </Link>
-                        </Item>
-                    </List>
-                </Collapse>
-            </React.Fragment>
-        )
-    }
+  render() {
+    return (
+      <React.Fragment>
+        <Link to="/" className="navbar-brand">
+            My test MERN Application
+        </Link>
+        <Collapse>
+          <List>
+            <Item>
+              <Link to="/people" className="nav-link">
+                People
+               </Link>
+            </Item>
+            <Item>
+              <Link to="/account" className="nav-link">
+                Account
+              </Link>
+            </Item>
+          </List>
+        </Collapse>
+      </React.Fragment>
+    )
+  }
 }
 
 export default Links

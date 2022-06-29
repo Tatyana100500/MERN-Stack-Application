@@ -1,7 +1,7 @@
 
-import React, { useEffect, useRef, useState, useCallback, useContext, createContext } from 'react';
+import React, { useRef, useState, useContext, createContext } from 'react';
 import { Form, Button, Spinner } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { UpDateSchema } from '../validationSchemas.js';
 import { useFormik, Formik } from 'formik';
 import axios from 'axios';
@@ -9,7 +9,6 @@ import FormContainer from '../components/FormContainer';
   
   const AccountUpdate = () => {
 	const [signUpError, setSignUpError] = useState(null);
-	const [avatarPreview, setAvatarPreview] = useState("images-30.jpeg");
 	const authContext = createContext({});
 	const auth = useContext(authContext);
 	const navigate = useNavigate();
@@ -26,26 +25,21 @@ import FormContainer from '../components/FormContainer';
 		return UpDateSchema;
 	  },
 	  onSubmit: async ({ name, password, photo }, { setSubmitting }) => {
-		console.log(name, password, photo)
 		const formData = new FormData();
 		formData.append('name', name)
 		formData.append('password', password)
         formData.append('photo', photo)
-		console.log(formData)
 		setSubmitting(true);
-  
 		const url = 'http://localhost:3001/account/';
-  
 		try {
 		  const res = await axios.put(`${url}${currentUserId}`, formData, {
 			headers: {
 				'Content-Type': 'multipart/form-data',
 			},
-	    } );
-		  console.log(res.data)
-		localStorage.setItem('isLogin', res.data.success);
-		localStorage.setItem('token', res.data.token);
-		localStorage.setItem('currentAccount', res.data.id);
+	      });
+		  localStorage.setItem('isLogin', res.data.success);
+		  localStorage.setItem('token', res.data.token);
+		  localStorage.setItem('currentAccount', res.data.id);
 		  navigate('/account');
 		} catch (e) {
 		  if (e.isAxiosError && e.response && e.response.status === 409) {
@@ -55,27 +49,13 @@ import FormContainer from '../components/FormContainer';
 			setSignUpError('netError');
 		  } else {
 			setSignUpError('unknown');
-			console.error(e, '??????????????');
+			console.error(e);
 		  }
-  
 		  setSubmitting(false);
 		}
 	  },
 	});
-  
-	const redirectAuthorized = useCallback(() => {
-		if (auth.loggedIn) {
-		  navigate('/');
-		}
-	  },
-	  [auth.loggedIn, navigate],
-	);
-  
-	useEffect(() => {
-	  redirectAuthorized();
-	  nameRef.current.focus();
-	}, [redirectAuthorized]);
-  
+
 	return (
 	  <FormContainer>
 		<Formik>
@@ -123,7 +103,6 @@ import FormContainer from '../components/FormContainer';
 			  required
 			  placeholder="Фото"
 			  onChange={ (e) => {
-				console.log('GGGGGGGGGGG', e.target.files[0])
 				formik.setFieldValue('photo', e.target.files[0])
 				formik.setFieldTouched('photo', true)
 			  }}

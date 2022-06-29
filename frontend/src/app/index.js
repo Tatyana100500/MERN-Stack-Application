@@ -7,7 +7,6 @@ import store from '../store.js';
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 function App() {
-	//localStorage.clear()
     return (
 		<Provider store={store}>
         <Router>

@@ -12,9 +12,7 @@ export const userSlice = createSlice({
 	  state.currentUserId = payload;
 	},
 	setisLogin: (state, { payload }) => {
-	  console.log('after', state.isLogin)
 	  state.isLogin = payload;
-	  console.log('befor', state.isLogin)
 	},
   },
 });

@@ -1,86 +1,68 @@
-import React, { useEffect, useRef, useState, useCallback, useContext, createContext } from 'react';
+import React, { useRef, useState, useContext, createContext } from 'react';
 import { Form, Button, Spinner } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { signUpSchema } from '../validationSchemas.js';
 import { useFormik, Formik } from 'formik';
 import axios from 'axios';
 import FormContainer from '../components/FormContainer';
+import { render } from 'react-dom';
   
-  const SignUp = () => {
-	const [signUpError, setSignUpError] = useState(null);
-	const authContext = createContext({});
-	const auth = useContext(authContext);
-	const navigate = useNavigate();
-	const nameRef = useRef();
-  
-	const formik = useFormik({
-	  initialValues: {
-		name: '',
-		email: '',
-		password: '',
-		birthdate: '',
-		gender: '',
-		photo: '',
-	  },
-	  validationSchema: () => {
-		setSignUpError(null);
-		return signUpSchema;
-	  },
-	  onSubmit: async ({ name, email, password, birthdate, gender, photo }, { setSubmitting }) => {
-		console.log(name, email, password, birthdate, gender, photo)
-		const formData = new FormData();
-		formData.append('name', name)
-		formData.append('email', email)
-		formData.append('password', password)
-		formData.append('birthdate', birthdate)
-        formData.append('gender', gender)
-        formData.append('photo', photo)
-		console.log(formData)
-		setSubmitting(true);
-  
-		const url = 'http://localhost:3001/';
-  
-		try {
-		  const res = await axios.post(url, formData, {
+const SignUp = () => {
+  const [signUpError, setSignUpError] = useState(null);
+  const authContext = createContext({});
+  //const auth = useContext(authContext);
+  const navigate = useNavigate();
+  const nameRef = useRef();
+  const formik = useFormik({
+	initialValues: {
+	  name: '',
+	  email: '',
+      password: '',
+	  birthdate: '',
+	  gender: '',
+	  photo: '',
+	},
+	validationSchema: () => {
+	  setSignUpError(null);
+	  return signUpSchema;
+	},
+	onSubmit: async ({ name, email, password, birthdate, gender, photo }, { setSubmitting }) => {
+	  const formData = new FormData();
+	  formData.append('name', name)
+	  formData.append('email', email)
+	  formData.append('password', password)
+	  formData.append('birthdate', birthdate)
+      formData.append('gender', gender)
+      formData.append('photo', photo)
+	  setSubmitting(true);
+	  const url = 'http://localhost:3001/';
+	  try {
+		const res = await axios.post(url, formData, {
 			headers: {
 				'Content-Type': 'multipart/form-data',
 			},
-	    } );
-		  console.log(res.data)
+	    });
 		localStorage.setItem('isLogin', res.data.success);
 		localStorage.setItem('token', res.data.token);
 		localStorage.setItem('currentAccount', res.data.id);
-		  navigate('/account');
-		} catch (e) {
-		  if (e.isAxiosError && e.response && e.response.status === 409) {
-			setSignUpError('userExists');
-			nameRef.current.select();
-		  } else if (e.isAxiosError && e.message === 'Network Error') {
-			setSignUpError('netError');
-		  } else {
-			setSignUpError('unknown');
-			console.error(e, '??????????????');
-		  }
-  
-		  setSubmitting(false);
+		navigate('/account');
+		render()
+	  } catch (e) {
+		if (e.isAxiosError && e.response && e.response.status === 409) {
+		  setSignUpError('userExists');
+		  nameRef.current.select();
+		} else if (e.isAxiosError && e.message === 'Network Error') {
+		  setSignUpError('netError');
+		} else {
+		  setSignUpError('unknown');
+		  console.error(e);
 		}
-	  },
-	});
-  
-	const redirectAuthorized = useCallback(() => {
-		if (auth.loggedIn) {
-		  navigate('/');
-		}
-	  },
-	  [auth.loggedIn, navigate],
-	);
-  
-	useEffect(() => {
-	  redirectAuthorized();
-	  nameRef.current.focus();
-	}, [redirectAuthorized]);
-  
-	return (
+		setSubmitting(false);
+	  }
+	},
+  });
+
+    return (
 	  <FormContainer>
 		<Formik>
 		<Form className="p-3" onSubmit={formik.handleSubmit} encType="multipart/form-data">
@@ -179,7 +161,6 @@ import FormContainer from '../components/FormContainer';
 			  required
 			  placeholder="Фото"
 			  onChange={ (e) => {
-				console.log('GGGGGGGGGGG', e.target.files[0])
 				formik.setFieldValue('photo', e.target.files[0])
 				formik.setFieldTouched('photo', true)
 			  }}

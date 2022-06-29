@@ -8,7 +8,6 @@ export const insertAccount = payload => api.post(`/`, payload)
 export const logIn = payload => api.post(`/login`, payload)
 export const getAllAccounts = () => api.get(`/people`)
 export const updateAccountById = (id, payload) => api.put(`/account/update/${id}`, payload)
-export const deleteAccountById = id => api.delete(`/account/${id}`)
 export const getAccountById = id => api.get(`/account/${id}`)
 export const getCurrentAccount = id => api.get(`/account/${id}`)
 
@@ -17,7 +16,6 @@ const apis = {
 	logIn,
     getAllAccounts,
     updateAccountById,
-    deleteAccountById,
     getAccountById,
 	getCurrentAccount,
 }
